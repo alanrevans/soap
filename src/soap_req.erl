@@ -294,14 +294,14 @@ soap_env(Body, Headers, '1.2') ->
      headers(Headers),
      <<"<SOAP-ENV:Body>">>,
      Body,
-     <<"</SOAP-ENV:Body></SOAP-ENV:Envelope>">>];
+     <<"</SOAP-ENV:Body></SOAP-ENV:Envelope>">>, 16#0A];
 %% version 1.1 is the default
 soap_env(Body, Headers, _) ->
     [<<"<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">">>,
      headers(Headers),
      <<"<SOAP-ENV:Body>">>,
      Body,
-     <<"</SOAP-ENV:Body></SOAP-ENV:Envelope>">>].
+     <<"</SOAP-ENV:Body></SOAP-ENV:Envelope>", 16#0A>>].
 
 headers([]) ->
     [];
