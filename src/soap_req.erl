@@ -290,23 +290,35 @@ http_body(Body, Headers, Version) ->
     soap_env(Body, Headers, Version).
 
 soap_env(Body, Headers, '1.2') ->
-    [<<"<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://www.w3.org/2003/05/soap-envelope\">">>,
+    [<<"<soap-env:Envelope">>,
+     <<" xmlns:cwmp=\"urn:dslforum-org:cwmp-1-0\"">>,
+     <<" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"">>,
+     <<" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"">>,
+     <<" xmlns:soap-env=\"http://www.w3.org/2003/05/soap-envelope\"">>,
+     <<" xmlns:soap-enc=\"http://schemas.xmlsoap.org/soap/encoding/\">">>,
      headers(Headers),
-     <<"<SOAP-ENV:Body>">>,
+     <<"<soap-env:Body>">>,
      Body,
-     <<"</SOAP-ENV:Body></SOAP-ENV:Envelope>">>, 16#0A];
+     <<"</soap-env:Body>">>,
+     <<"</soap-env:Envelope>">>, 
+     16#0A];
 %% version 1.1 is the default
 soap_env(Body, Headers, _) ->
-    [<<"<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">">>,
+    [<<"<soap-env:Envelope">>,
+     <<" xmlns:cwmp=\"urn:dslforum-org:cwmp-1-0\"">>,
+     <<" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"">>,
+     <<" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"">>,
+     <<" xmlns:soap-env=\"http://schemas.xmlsoap.org/soap/envelope/\"">>,
+     <<" xmlns:soap-enc=\"http://schemas.xmlsoap.org/soap/encoding/\">">>,
      headers(Headers),
-     <<"<SOAP-ENV:Body>">>,
+     <<"<soap-env:Body>">>,
      Body,
-     <<"</SOAP-ENV:Body></SOAP-ENV:Envelope>", 16#0A>>].
+     <<"</soap-env:Body></soap-env:Envelope>", 16#0A>>].
 
 headers([]) ->
     [];
 headers(Headers) ->
-    [<<"<SOAP-ENV:Header>">>, Headers, <<"</SOAP-ENV:Header>">>].
+    [<<"<soap-env:Header>">>, Headers, <<"</soap-env:Header>">>].
 
 
 add_if_not_present([], Tuple) ->
