@@ -115,6 +115,14 @@ new_req(Handler, Server, Options, Server_req) ->
 %% module, and creates a response message.
 -spec handle_message(Message :: binary(), Soap_req :: soap_req()) -> 
     server_http_response().
+
+%% Empty HTTP Post 
+handle_message(<<>>, Soap_req) ->
+    Handler = soap_req:handler(Soap_req),
+    Handler_s = soap_req:handler_state(Soap_req),
+    Handler_resp = Handler:empty_doc(<<>>, Soap_req, Handler_s),
+    {_Handler_s2, Soap_req2} = encode_soap_resp(Handler_resp),
+    soap_req:http_response(Soap_req2);
 handle_message(Message, Soap_req) ->
     Handler = soap_req:handler(Soap_req),
     Handler_state = soap_req:handler_state(Soap_req),
@@ -310,13 +318,15 @@ xml_parser_cb_wrapped(Event, #p_state{state = _Parser_state,
                                       soap_req = Soap_req} = S) ->
     try
         R = xml_parser_cb(Event, S),
-        %% io:format("R: ~P~n", [R, 8]),
+        %% io:format("R: ~p~n", [R]),
         R
     catch
         %% TODO: differentiate more (perhaps improve erlsom error codes)
         throw:#soap_error{} = Soap_error ->
+            io:format("Soap_error: ~p~n", [Soap_error]),
             throw(Soap_error#soap_error{soap_req = Soap_req, handler_state = Handler_state});
         Class:Reason ->
+            io:format("Clasee:Reason ~p:~p", [Class, Reason]),
             throw(#soap_error{type = client,
                               class = Class,
                               stacktrace = erlang:get_stacktrace(),
