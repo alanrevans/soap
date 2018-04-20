@@ -283,6 +283,8 @@ result_body({Result, Body, _, _}, Version) when Result == ok; Result == fault ->
     http_body(Body, [], Version);
 result_body({raw, _, Binary, _, _}, _Version) ->
     Binary;
+result_body({ok, no_response}, _Version) ->
+    [];
 result_body({error, _, _, _}, _Version) ->
     [].
 

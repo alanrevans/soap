@@ -569,6 +569,8 @@ parse_event(Parser, Event, State, Type) ->
                               class = Class, reason = Reason})
     end.
 
+encode_soap_resp({ok, {}, Soap_req, Handler_s} = Soap_resp) ->
+    {Handler_s, soap_req:set_resp({ok, no_response}, Soap_req)};
 encode_soap_resp({error, _, Soap_req, Handler_s} = Soap_resp) ->
     {Handler_s, soap_req:set_resp(Soap_resp, Soap_req)};
 encode_soap_resp({raw, _, _, Soap_req, Handler_s} = Soap_resp) ->
